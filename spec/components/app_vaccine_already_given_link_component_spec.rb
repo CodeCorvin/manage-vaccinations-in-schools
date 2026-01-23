@@ -8,16 +8,14 @@ describe AppVaccineAlreadyGivenLinkComponent do
   let(:session) { create(:session, :today, team:, programmes: [programme]) }
   let(:patient) { build(:patient, id: 123) }
 
-  let(:component) do
-    described_class.new(programme:, patient:, session:)
-  end
+  let(:component) { described_class.new(programme:, patient:, session:) }
 
   before do
     # rubocop:disable RSpec/AnyInstance
     allow_any_instance_of(Pundit::Authorization).to receive(:policy).and_return(
       instance_double(
         VaccinationRecordPolicy,
-        record_already_vaccinated?: authorised,
+        record_already_vaccinated?: authorised
       )
     )
     # rubocop:enable RSpec/AnyInstance
@@ -31,7 +29,18 @@ describe AppVaccineAlreadyGivenLinkComponent do
     end
 
     context "when authorised and has had first dose already" do
-      let(:patient) { build(:patient, :consent_no_response, id: 123, programmes: [Programme.mmr]) }
+      let(:patient) do
+        build(
+          :patient,
+          :consent_no_response,
+          id: 123,
+          programmes: [Programme.mmr]
+        )
+      end
+
+      before do
+        patient.programme_status(programme, academic_year: AcademicYear.current).dose_sequence = 2
+      end
 
       it { should have_link("Record 2nd dose as already given") }
     end
