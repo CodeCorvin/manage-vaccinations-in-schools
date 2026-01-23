@@ -25,9 +25,11 @@ describe "Parental consent" do
     and_i_choose_an_ethnic_group
     and_i_choose_an_ethnic_background
     then_i_see_the_confirmation_page
+    and_the_ethnicity_information_is_shown
 
     when_i_click_on_confirm
     then_i_see_the_consent_confirmation_page
+    and_the_patient_is_updated_with_the_ethnicity_information
   end
 
   scenario "Flu - already has a PSD won't need triage and consented to nasal" do
@@ -87,6 +89,7 @@ describe "Parental consent" do
     location = create(:school, name: "Pilot School", programmes: [@programme])
     @session = create(:session, :scheduled, programmes: [@programme], location:)
     @child = create(:patient, session: @session)
+    stub_pds_search_to_return_a_patient(@child.nhs_number)
   end
 
   def and_the_child_has_a_psd
@@ -215,7 +218,7 @@ describe "Parental consent" do
   end
 
   def when_i_click_on_confirm
-    click_button "Confirm"
+    perform_enqueued_jobs { click_button "Confirm" }
   end
 
   def then_i_see_the_ethnicity_question_page
@@ -239,7 +242,21 @@ describe "Parental consent" do
     click_button "Continue"
   end
 
+  def and_the_ethnicity_information_is_shown
+    expect(page).to have_content(
+      "Mixed or multiple ethnic groups (White and Black Caribbean)"
+    )
+  end
+
   def then_i_see_the_consent_confirmation_page
     expect(page).to have_content("Consent confirmed")
+  end
+
+  def and_the_patient_is_updated_with_the_ethnicity_information
+    Sidekiq::Job.drain_all
+    expect(@child.reload).to have_attributes(
+      ethnic_group: "mixed_or_multiple_ethnic_groups",
+      ethnic_background: "mixed_white_and_black_caribbean"
+    )
   end
 end
