@@ -39,6 +39,6 @@ class AppVaccineAlreadyGivenLinkComponent < ViewComponent::Base
 
   def had_first_dose?
     programme_status = @patient.programme_status(@programme, academic_year: AcademicYear.current)
-    programme_status.dose_sequence.present? && programme_status.dose_sequence >= 1
+    programme_status.dose_sequence.present? && programme_status.dose_sequence > 1
   end
 end
