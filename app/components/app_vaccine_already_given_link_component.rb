@@ -13,14 +13,20 @@ class AppVaccineAlreadyGivenLinkComponent < ViewComponent::Base
     tag.li(class: "app-action-list__item") do
       link_to(
         label,
-        session_patient_programme_record_already_vaccinated_path(@session, @patient, @programme),
+        session_patient_programme_record_already_vaccinated_path(
+          @session,
+          @patient,
+          @programme
+        )
       )
     end
   end
 
   def render?
     programme &&
-      helpers.policy(VaccinationRecord.new(patient:, session:, programme:)).record_already_vaccinated?
+      helpers.policy(
+        VaccinationRecord.new(patient:, session:, programme:)
+      ).record_already_vaccinated?
   end
 
   private
@@ -38,7 +44,9 @@ class AppVaccineAlreadyGivenLinkComponent < ViewComponent::Base
   end
 
   def had_first_dose?
-    programme_status = @patient.programme_status(@programme, academic_year: AcademicYear.current)
-    programme_status.dose_sequence.present? && programme_status.dose_sequence > 1
+    programme_status =
+      @patient.programme_status(@programme, academic_year: AcademicYear.current)
+    programme_status.dose_sequence.present? &&
+      programme_status.dose_sequence > 1
   end
 end
