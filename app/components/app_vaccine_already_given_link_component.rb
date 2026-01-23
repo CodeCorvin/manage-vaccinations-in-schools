@@ -27,14 +27,18 @@ class AppVaccineAlreadyGivenLinkComponent < ViewComponent::Base
 
   def label
     if @programme.mmr?
-      # TODO: Work out whether this is a first or second dose
-      if true
-        "Record 1st dose as already given"
-      else
+      if had_first_dose?
         "Record 2nd dose as already given"
+      else
+        "Record 1st dose as already given"
       end
     else
       "Record as already vaccinated"
     end
+  end
+
+  def had_first_dose?
+    programme_status = @patient.programme_status(@programme, academic_year: AcademicYear.current)
+    programme_status.dose_sequence.present? && programme_status.dose_sequence >= 1
   end
 end

@@ -26,8 +26,14 @@ describe AppVaccineAlreadyGivenLinkComponent do
   context "on the MMR programme" do
     let(:programme) { Programme.mmr }
 
-    context "when authorised" do
+    context "when authorised and has not had first dose" do
       it { should have_link("Record 1st dose as already given") }
+    end
+
+    context "when authorised and has had first dose already" do
+      let(:patient) { build(:patient, :consent_no_response, id: 123, programmes: [Programme.mmr]) }
+
+      it { should have_link("Record 2nd dose as already given") }
     end
 
     context "when NOT authorised" do
