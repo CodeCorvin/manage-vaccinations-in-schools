@@ -10,6 +10,8 @@ class PatientImport < ApplicationRecord
 
   has_many :patient_changesets
 
+  enum :parent_removal_status, { processing: 0, completed: 1 }, default: nil
+
   def count_column(patient, parents, parent_relationships)
     if patient.new_record? || parents.any?(&:new_record?) ||
          parent_relationships.any?(&:new_record?)

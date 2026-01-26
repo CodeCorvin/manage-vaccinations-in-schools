@@ -12,6 +12,7 @@
 #  csv_removed_at               :datetime
 #  exact_duplicate_record_count :integer
 #  new_record_count             :integer
+#  parent_removal_status        :integer
 #  processed_at                 :datetime
 #  reviewed_at                  :datetime         default([]), not null, is an Array
 #  reviewed_by_user_ids         :bigint           default([]), not null, is an Array

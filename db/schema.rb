@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_22_093544) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_26_131010) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -118,6 +118,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_22_093544) do
     t.integer "exact_duplicate_record_count"
     t.bigint "location_id", null: false
     t.integer "new_record_count"
+    t.integer "parent_removal_status"
     t.datetime "processed_at"
     t.datetime "reviewed_at", default: [], null: false, array: true
     t.bigint "reviewed_by_user_ids", default: [], null: false, array: true
@@ -175,6 +176,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_22_093544) do
     t.datetime "csv_removed_at"
     t.integer "exact_duplicate_record_count"
     t.integer "new_record_count"
+    t.integer "parent_removal_status"
     t.datetime "processed_at"
     t.datetime "reviewed_at", default: [], null: false, array: true
     t.bigint "reviewed_by_user_ids", default: [], null: false, array: true
