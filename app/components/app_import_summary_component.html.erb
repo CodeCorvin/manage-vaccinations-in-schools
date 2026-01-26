@@ -55,4 +55,16 @@
         <% end %>
     <% end %>
   <% end %>
+
+  <% if Flipper.enabled?(:import_bulk_remove_parents) &&
+        import.is_a?(PatientImport) && import.processed? &&
+        import.parent_relationships.present? %>
+    <% if import.parent_removal_status == "processing" %>
+      <p class="nhsuk-u-secondary-text-colour">Parent-child relationships are currently being removed from this import</p>
+    <% elsif import.parent_removal_status.nil? %>
+      <p>
+        <%= link_to "Remove all parent-child relationships from import", imports_bulk_remove_parents_path(import.class.name.underscore, import.id) %>
+      </p>
+    <% end %>
+  <% end %>
 <% end %>
