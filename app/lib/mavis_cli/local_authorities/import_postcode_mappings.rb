@@ -30,7 +30,7 @@ module MavisCLI
             gss_code_index = headers.index(gss_code_field)
 
             progress_bar =
-              ProgressBar.create!(
+              ProgressBar.create(
                 starting_at: 0,
                 total: stream.size,
                 format: "%a %e %P% Processed: %c bytes of %C"
