@@ -88,26 +88,17 @@ module EthnicityConcern
            allow_nil: true
          }
 
-    before_validation :normalise_ethnic_background_other, on: :ethnicity_update
+    before_validation :normalise_ethnic_background_other
+
+    validates :ethnic_background_other,
+              presence: true,
+              if: :require_ethnic_background_other?
 
     validates :ethnic_background_other,
               length: {
                 maximum: 300
               },
-              on: :ethnicity_update,
-              if: -> do
-                wizard_step == :ethnic_background &&
-                  ethnic_background_requires_additional_details?
-              end
-
-    validates :ethnic_background_other,
-              absence: true,
-              on: :ethnicity_update,
-              if: -> do
-                wizard_step == :ethnic_background &&
-                  ethnic_background.present? &&
-                  !ethnic_background_requires_additional_details?
-              end
+              if: :require_ethnic_background_other?
   end
 
   class_methods do
@@ -142,12 +133,21 @@ module EthnicityConcern
   end
 
   def normalise_ethnic_background_other
-    return unless wizard_step == :ethnic_background
     return if ethnic_background.blank?
 
     # If the chosen background isn't an "any other" option, this value must not persist
     self.ethnic_background_other =
       nil unless ethnic_background_requires_additional_details?
+  end
+
+  def require_ethnic_background_other?
+    validate_ethnic_background_other? &&
+      ethnic_background_requires_additional_details?
+  end
+
+  def validate_ethnic_background_other?
+    will_save_change_to_ethnic_background? ||
+      will_save_change_to_ethnic_background_other?
   end
 
   def ethnic_background_requires_additional_details?
