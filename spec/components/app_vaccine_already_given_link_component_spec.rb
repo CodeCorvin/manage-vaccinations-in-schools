@@ -11,14 +11,11 @@ describe AppVaccineAlreadyGivenLinkComponent do
   let(:component) { described_class.new(programme:, patient:, session:) }
 
   before do
-    # rubocop:disable RSpec/AnyInstance
-    allow_any_instance_of(Pundit::Authorization).to receive(:policy).and_return(
-      instance_double(
-        VaccinationRecordPolicy,
-        record_already_vaccinated?: authorised
-      )
+    stub_authorization(
+      allowed: authorised,
+      klass: VaccinationRecordPolicy,
+      methods: %i[record_already_vaccinated?]
     )
-    # rubocop:enable RSpec/AnyInstance
   end
 
   context "on the MMR programme" do
