@@ -39,7 +39,11 @@ describe AppVaccineAlreadyGivenLinkComponent do
       end
 
       before do
-        patient.programme_status(programme, academic_year: AcademicYear.current).dose_sequence = 2
+        patient.programme_status(
+          programme,
+          academic_year: AcademicYear.current
+        ).dose_sequence =
+          2
       end
 
       it { should have_link("Record 2nd dose as already given") }
