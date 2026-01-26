@@ -1367,7 +1367,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_23_015634) do
               ELSE NULL::text
           END AS patient_gender,
       ((pps.academic_year - pat.birth_academic_year) - 5) AS patient_year_group,
-      COALESCE(la.mhclg_code, ''::character varying) AS patient_local_authority_code,
+      COALESCE(la.mhclg_code, pat.local_authority_mhclg_code, ''::character varying) AS patient_local_authority_code,
       COALESCE(la.mhclg_code, ''::character varying) AS patient_school_local_authority_code,
           CASE
               WHEN (school.urn IS NOT NULL) THEN school.urn
